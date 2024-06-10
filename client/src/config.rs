@@ -9,7 +9,7 @@ use std::fs::{self, read_to_string, OpenOptions, Permissions};
 use std::io::Write;
 use std::ops::{Deref, DerefMut};
 use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::{anyhow, Context, Result};
 use serde::{Deserialize, Serialize};
@@ -92,7 +92,7 @@ pub struct ConfigWriteGuard<'a>(&'a mut Config);
 
 impl Config {
     /// Loads the configuration from the system.
-    pub fn load() -> Result<Self> {
+    pub fn load(config_path: Option<&Path>) -> Result<Self> {
         let path = get_config_path()
             .map_err(|e| {
                 tracing::warn!("Could not get config path: {}", e);
